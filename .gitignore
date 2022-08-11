@@ -1,3 +1,4 @@
 #ignore
 out/*
-src/test.json
+src/JSON_Parts/test.json
+*.txt

@@ -1,3 +1,6 @@
+package JSON_Parts;
+
+import JSON_Parts.Json_Option_Element;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;

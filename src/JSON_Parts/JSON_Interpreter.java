@@ -1,22 +1,27 @@
+package JSON_Parts;
+
+import UI_Elements.Category;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class JSON_Interpreter {
     private JSONObject jsonObject;
-    ArrayList<Json_Category_Element> all_data;
+    private ArrayList<Json_Category_Element> all_data;
 
-    public JSON_Interpreter()
+    public JSON_Interpreter(String p_str_Json)
     {
         // initializes the ArrayList
         all_data = new ArrayList<>();
 
         // parses the JSON-Object
         try {
-            jsonObject = (JSONObject) JSONValue.parse("{\"abc\":{\"APP_SPEED\":{\"value\":1,\"title\":\"Game-Speed\",\"desc\":\"How fast the game is running. Between 1 and 10\",\"type\":\"int\",\"min\":1,\"max\":10},\"LED_PIXEL_SCALE\":{\"value\":30,\"title\":null,\"desc\":null,\"type\":\"int\",\"min\":5,\"max\":null}},\"def\":{\"ESP_BAUD\":{\"value\":9600,\"title\":null,\"desc\":null,\"type\":\"int_preset\",\"presets\":[115200,9600]}}}");
+            System.out.println(p_str_Json);
+            jsonObject = (JSONObject) JSONValue.parse(p_str_Json);
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -104,6 +109,13 @@ public class JSON_Interpreter {
 
                     // Sets t_comp to be the JComboBox
                     t_comp = t_dropdown;
+                }
+                else if (opt_element.get("type").equals("color"))
+                {
+                    Color start_color = Color.WHITE;
+                    if (opt_element.get("value") != null)
+                        start_color = Color.getColor( (String) opt_element.get("value"));
+                    t_comp = new JColorChooser(start_color);
                 }
                 if (opt_element.get("desc") != null && t_comp != null)
                 {

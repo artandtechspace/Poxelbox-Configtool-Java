@@ -1,9 +1,10 @@
+package UI_Elements;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Category {
-    private JFrame parent;
     private JPanel main_panel;
     private JLabel lbl_category_name;
     private JPanel options_panel;
@@ -17,6 +18,7 @@ public class Category {
         // Initialise objects
         all_options = new ArrayList<>();
         options_panel.setLayout(new BoxLayout(options_panel,BoxLayout.Y_AXIS));
+        options_panel.setBorder(BorderFactory.createLineBorder(Color.BLACK,1,false));
 
         // sets the lable of the category to its name
         lbl_category_name.setText(pName);
@@ -48,14 +50,17 @@ public class Category {
      * @param pText Text standing before the option
      */
     public Option add_option(String pText, JComponent pComp, String description) {
-        Option t_option = new Option(parent, pText, pComp, description);
+        Option t_option = new Option(pText, pComp, description);
         options_panel.add(t_option);
         all_options.add(t_option);
         return t_option;
     }
 
-    public void set_parent(JFrame pParent)
+    public void setParent(JFrame pParent)
     {
-        parent = pParent;
+        for (Option tOption: all_options) {
+            tOption.setParent(pParent);
+            tOption.get_value();
+        }
     }
 }
