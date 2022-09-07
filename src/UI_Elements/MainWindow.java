@@ -11,11 +11,12 @@ public class MainWindow {
     public JButton btn_restart_game;
     public JButton btn_restart_pi;
     public JButton btn_save_settings;
+    public JButton btn_reload;
     private JPanel panel_settings;
     private JPanel button_panel;
 
     private JFrame parent;
-    public JButton[] buttons = {btn_start_game, btn_stop_game, btn_restart_game, btn_restart_pi, btn_save_settings};
+    public JButton[] buttons = {btn_start_game, btn_stop_game, btn_restart_game, btn_restart_pi, btn_save_settings, btn_reload};
     public ArrayList<Category> all_categories;
 
     public MainWindow(JFrame pParent)
@@ -23,10 +24,14 @@ public class MainWindow {
         // initiates the UI Components
         panel_settings.setLayout(new BoxLayout(panel_settings,BoxLayout.Y_AXIS));
         parent = pParent;
-        parent.add(panel1);
-        panel1.updateUI();
 
         all_categories = new ArrayList<>();
+
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setVisible(false);
+        }
+        btn_save_settings.setVisible(true);
+        btn_reload.setVisible(true);
     }
 
     public void add_category(Category t_category) {
@@ -35,5 +40,15 @@ public class MainWindow {
         panel_settings.add(new JPanel());
         panel_settings.add(t_category.get_content());
         panel1.updateUI();
+    }
+
+    public void show() {
+        parent.add(panel1);
+        panel1.updateUI();
+    }
+
+    public void reset() {
+        all_categories = new ArrayList<>();
+        panel_settings.removeAll();
     }
 }

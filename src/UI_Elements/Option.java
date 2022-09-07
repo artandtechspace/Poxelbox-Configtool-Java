@@ -91,7 +91,11 @@ public class Option extends JPanel {
         } else if (component.getClass().equals(JColorChooser.class)) {
             JColorChooser t_colorChooser = (JColorChooser) component;
             return t_colorChooser.getColor().getRGB();
+        } else if (component.getClass().equals(JCheckBox.class)) {
+            JCheckBox t_checkbox = (JCheckBox) component;
+            return t_checkbox.isSelected();
         }
+
         return null;
     }
 

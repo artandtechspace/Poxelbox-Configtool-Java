@@ -10,7 +10,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class JSON_Interpreter {
-    private JSONObject jsonObject;
+    private static JSONObject jsonObject;
+    private static JSONObject return_val;
     private ArrayList<Json_Category_Element> all_data;
 
     public JSON_Interpreter(String p_str_Json)
@@ -92,8 +93,7 @@ public class JSON_Interpreter {
                     // initials the component
                     t_comp = new JSpinner(new SpinnerNumberModel(val, min, max, step));
                 }
-                else if (opt_element.get("type").equals("int_preset"))
-                {
+                else if (opt_element.get("type").equals("int_preset")) {
                     // Creates a new JComboBox (setting t_comp to be one does not enable the needed functions)
                     JComboBox<Integer> t_dropdown = new JComboBox<>();
 
@@ -110,12 +110,34 @@ public class JSON_Interpreter {
                     // Sets t_comp to be the JComboBox
                     t_comp = t_dropdown;
                 }
-                else if (opt_element.get("type").equals("color"))
-                {
+                else if (opt_element.get("type").equals("string_preset")) {
+                    // Creates a new JComboBox (setting t_comp to be one does not enable the needed functions)
+                    JComboBox<String> t_dropdown = new JComboBox<>();
+
+                    // Add the elements of "presets" as Items for the JComboBox
+                    for (Object t_obj : (JSONArray) opt_element.get("presets")) {
+                        t_dropdown.addItem((String) t_obj);
+                    }
+
+                    // Sets the default value, if existing
+                    if (opt_element.get("value") != null) {
+                        t_dropdown.setSelectedItem(opt_element.get("value"));
+                    }
+
+                    // Sets t_comp to be the JComboBox
+                    t_comp = t_dropdown;
+                }
+                else if (opt_element.get("type").equals("color")) {
                     Color start_color = Color.WHITE;
                     if (opt_element.get("value") != null)
                         start_color = Color.getColor( (String) opt_element.get("value"));
                     t_comp = new JColorChooser(start_color);
+                }
+                else if (opt_element.get("type").equals("bool")) {
+                    JCheckBox t_checkbox = new JCheckBox();
+                    if (opt_element.get("value") != null)
+                        t_checkbox.setSelected((boolean) opt_element.get("value"));
+                    t_comp = t_checkbox;
                 }
                 if (opt_element.get("desc") != null && t_comp != null)
                 {
@@ -128,5 +150,26 @@ public class JSON_Interpreter {
             return_list.add(t_cat);
         }
         return return_list;
+    }
+
+    public static void build_answer(Object[] input) {
+        int counter = 0;
+        return_val = new JSONObject();
+        for (int i = 0; i < jsonObject.size(); i++) {
+            String json_category_key = (String) jsonObject.keySet().toArray()[i];
+            JSONObject t_json_category = (JSONObject) jsonObject.get(json_category_key);
+            JSONObject t_return_category = new JSONObject();
+            for (int j = 0; i < t_json_category.size(); i++) {
+                String json_option_key = (String) t_json_category.keySet().toArray()[i];
+                t_return_category.put(json_option_key, input[counter]);
+                counter++;
+            }
+            return_val.put(json_category_key, t_return_category);
+        }
+    }
+
+    public static String get_answer()
+    {
+        return return_val.toJSONString();
     }
 }

@@ -2,6 +2,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class Web_Stuff {
     private CompletableFuture<HttpResponse<String>> responseFuture;
@@ -17,7 +18,7 @@ public class Web_Stuff {
 
             // create a request
             HttpRequest request = HttpRequest.newBuilder(URI.create(adresse + "/get-view"))
-                    .header("accept", "application/json")
+                    .header("Content-Type", "application/json")
                     .build();
 
             // use the client to send the request
@@ -34,12 +35,8 @@ public class Web_Stuff {
      *
      * @return
      */
-    public HttpResponse<String> get_response() {
-        try {
+    public HttpResponse<String> get_response() throws ExecutionException, InterruptedException {
             return responseFuture.get();
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     public boolean send_data(String pData)
@@ -49,10 +46,7 @@ public class Web_Stuff {
                 .header("content-type","application/json")
                 .build();
         CompletableFuture<HttpResponse<String>> futureResponse = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println("Text");
         try {
-            System.out.println(futureResponse.get().headers());
-            System.out.println(futureResponse.get().statusCode());
             return futureResponse.get().statusCode() == 200;
         } catch (Exception e) {
             return false;
