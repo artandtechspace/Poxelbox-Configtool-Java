@@ -17,7 +17,7 @@ public class Web_Stuff {
             adresse = pAdresse;
 
             // create a request
-            HttpRequest request = HttpRequest.newBuilder(URI.create(adresse + "/get-view"))
+            HttpRequest request = HttpRequest.newBuilder(URI.create(adresse + "/api/get-view"))
                     .header("Content-Type", "application/json")
                     .build();
 
@@ -41,7 +41,7 @@ public class Web_Stuff {
 
     public boolean send_data(String pData)
     {
-        HttpRequest request = HttpRequest.newBuilder(URI.create(adresse + "/push-view"))
+        HttpRequest request = HttpRequest.newBuilder(URI.create(adresse + "/api/push-view"))
                 .POST(HttpRequest.BodyPublishers.ofString(pData))
                 .header("content-type","application/json")
                 .build();

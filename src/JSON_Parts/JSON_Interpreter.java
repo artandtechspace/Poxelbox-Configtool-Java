@@ -21,7 +21,9 @@ public class JSON_Interpreter {
 
         // parses the JSON-Object
         try {
-            System.out.println(p_str_Json);
+            System.out.println("JSON Input: ");
+            System.out.print(p_str_Json);
+            System.out.println("");
             jsonObject = (JSONObject) JSONValue.parse(p_str_Json);
         }
         catch (Exception e) {
@@ -69,26 +71,27 @@ public class JSON_Interpreter {
                     // initials the component
                     t_comp = new JSpinner(new SpinnerNumberModel(val, min, max, step));
                 }
-                else if (opt_element.get("type").equals("double")) {
+                else if (opt_element.get("type").equals("float")) {
                     // default values
                     double min = Double.MIN_VALUE;
                     double max = Double.MAX_VALUE;
-                    double step = .01;
+                    double step = .001;
 
                     // uses value if given
                     if (opt_element.get("min") != null)
-                        min = (double) opt_element.get("min");
+                        min = ((Number) opt_element.get("min")).floatValue();
                     if (opt_element.get("max") != null)
-                        max = (double) opt_element.get("max");
+                        max = ((Number) opt_element.get("max")).floatValue();
                     if (opt_element.get("step_size") != null)
-                        step = (double) opt_element.get("step_size");
+                        step = ((Number) opt_element.get("step_size")).floatValue();
 
                     // calculates the middle value between min and max as default value
                     double val = max - min / 2 + min;
 
                     // uses value if given
-                    if (opt_element.get("value") != null)
-                        val = (double) opt_element.get("value");
+                    if (opt_element.get("value") != null){
+                        val = ((Number) opt_element.get("value")).floatValue();
+                    }
 
                     // initials the component
                     t_comp = new JSpinner(new SpinnerNumberModel(val, min, max, step));
@@ -153,6 +156,14 @@ public class JSON_Interpreter {
     }
 
     public static void build_answer(Object[] input) {
+        if (input.length != ((JSONObject) jsonObject.get("Settings")).size()) {
+            System.out.println("UI output and jsonObject category Settings from http request don't have equal length; " + input.length + ", " + ((JSONObject) jsonObject.get("Settings")).size());
+            System.out.println("UI outputs are: ");
+            for (Object in : input) {
+                System.out.println("\t " + in.toString());
+            }
+        }
+
         int counter = 0;
         return_val = new JSONObject();
         for (int i = 0; i < jsonObject.size(); i++) {
